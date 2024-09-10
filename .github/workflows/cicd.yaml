@@ -52,6 +52,10 @@ jobs:
         echo "${{ secrets.KUBECONFIG_PART2 }}" | base64 --decode >> $HOME/.kube/config
         kubectl config view
 
+    - name: Print Kubeconfig
+      run: |
+        cat $HOME/.kube/config
+
     # Step 7: Deploy to AKS
     - name: Deploy to AKS
       run: |
