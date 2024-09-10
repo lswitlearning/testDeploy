@@ -50,6 +50,7 @@ jobs:
         mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG_PART1 }}" | base64 --decode > $HOME/.kube/config
         echo "${{ secrets.KUBECONFIG_PART2 }}" | base64 --decode >> $HOME/.kube/config
+        kubectl config view
 
     # Step 7: Deploy to AKS
     - name: Deploy to AKS
