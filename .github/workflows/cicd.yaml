@@ -13,7 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      REGISTRY_NAME: ${{ env.REGISTRY_NAME }}
+      REGISTRY_NAME: ${{ secrets.REGISTRY_NAME }}
+      REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
+      AKS_CLUSTER_NAME: ${{ secrets.AKS_CLUSTER_NAME }}
+
 
   #Step 1: Checkout repository
     steps:
@@ -34,23 +37,22 @@ jobs:
   # Step 5: Build Docker image
     - name: Build Docker image
       run: |
-        docker build -t ${{ env.REGISTRY_NAME }}.azurecr.io/myapp:${{ github.sha }} .
+        docker build -t ${{ env.REGISTRY_URL }}/myapp:${{ github.sha }} .
 
     # Step 6: Push Docker image to ACR
     - name: Push Docker image to ACR
       run: |
-        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/myapp:${{ github.sha }}
+        docker push ${{ env.REGISTRY_URL }}/myapp:${{ github.sha }}
     
     #step:
     - uses: azure/aks-set-context@v3
       with:
         resource-group: 'deakinuni'
-        cluster-name: '${{ env.REGISTRY_NAME }}'
+        cluster-name: '${{ secrets.AKS_CLUSTER_NAME }}'
 
 
     - uses: Azure/k8s-deploy@v5
       with:
-        namespace: 'default'
         manifests: |
-          scripts/
-        images: '${{ env.REGISTRY_NAME }}.azurecr.io/myapp:${{ github.sha }}'
+          scripts/deploy.yaml
+        images: '${{ env.REGISTRY_URL }}/myapp:${{ github.sha }}'
