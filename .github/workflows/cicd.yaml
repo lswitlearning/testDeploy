@@ -59,7 +59,7 @@ jobs:
 
     - uses: Azure/k8s-deploy@v5
       with:
-        namespace: 'myapp'
+        namespace: 'default'
         manifests: |
           scripts/
         images: 'task8.azurecr.io/myapp:${{ github.sha }}'
