@@ -12,54 +12,45 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-  #step1
+    env:
+      REGISTRY_NAME: ${{ env.REGISTRY_NAME }}
+
+  #Step 1: Checkout repository
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
     
-    #   # Step 2: Install Azure CLI 
-    # - name: Install Azure CLI
-    #   run: |
-    #     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
-
-    # Step 3: Login to Azure
+  #Step 2: Login to Azure
     - name: Azure Login
       uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # Step 4: Log in to Azure Container Registry
+  # Step 3: Log in to Azure Container Registry
     - name: Log in to Azure Container Registry
       run: |
-        az acr login --name task8
+        az acr login --name ${{ env.REGISTRY_NAME }}
 
-    # Step 5: Build Docker image
+  # Step 5: Build Docker image
     - name: Build Docker image
       run: |
-        docker build -t task8.azurecr.io/myapp:${{ github.sha }} .
+        docker build -t ${{ env.REGISTRY_NAME }}.azurecr.io/myapp:${{ github.sha }} .
 
     # Step 6: Push Docker image to ACR
     - name: Push Docker image to ACR
       run: |
-        docker push task8.azurecr.io/myapp:${{ github.sha }}
+        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/myapp:${{ github.sha }}
     
     #step:
     - uses: azure/aks-set-context@v3
       with:
         resource-group: 'deakinuni'
-        cluster-name: 'task8'
+        cluster-name: '${{ env.REGISTRY_NAME }}'
 
-    # Step 7: Deploy to AKS
-    # - name: Deploy to AKS
-    #   run: |
-    #     kubectl set image deployment/myapp myapp=task8.azurecr.io/myapp:${{ github.sha }}
-    #   # env:
-    #   #   KUBECONFIG: ${{ secrets.AKS_KUBECONFIG }}
 
     - uses: Azure/k8s-deploy@v5
       with:
         namespace: 'default'
         manifests: |
           scripts/
-        images: 'task8.azurecr.io/myapp:${{ github.sha }}'
+        images: '${{ env.REGISTRY_NAME }}.azurecr.io/myapp:${{ github.sha }}'
