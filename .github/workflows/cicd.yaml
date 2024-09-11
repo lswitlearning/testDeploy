@@ -51,8 +51,15 @@ jobs:
         cluster-name: 'task8'
 
     # Step 7: Deploy to AKS
-    - name: Deploy to AKS
-      run: |
-        kubectl set image deployment/myapp myapp=task8.azurecr.io/myapp:${{ github.sha }}
-      env:
-        KUBECONFIG: ${{ secrets.AKS_KUBECONFIG }}
+    # - name: Deploy to AKS
+    #   run: |
+    #     kubectl set image deployment/myapp myapp=task8.azurecr.io/myapp:${{ github.sha }}
+    #   # env:
+    #   #   KUBECONFIG: ${{ secrets.AKS_KUBECONFIG }}
+
+    - uses: Azure/k8s-deploy@v5
+      with:
+        namespace: 'myapp'
+        manifests: |
+          scripts/
+        images: 'task8.azurecr.io/myapp:${{ github.sha }}'
