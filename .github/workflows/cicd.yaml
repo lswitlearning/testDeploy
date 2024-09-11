@@ -17,10 +17,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     
-      # Step 2: Install Azure CLI 
-    - name: Install Azure CLI
-      run: |
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    #   # Step 2: Install Azure CLI 
+    # - name: Install Azure CLI
+    #   run: |
+    #     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
 
     # Step 3: Login to Azure
@@ -44,11 +44,11 @@ jobs:
       run: |
         docker push task8.azurecr.io/myapp:${{ github.sha }}
     
-    #step:
-    - uses: azure/aks-set-context@v3
-      with:
-        resource-group: 'deakinuni'
-        cluster-name: 'task8'
+    # #step:
+    # - uses: azure/aks-set-context@v3
+    #   with:
+    #     resource-group: 'deakinuni'
+    #     cluster-name: 'task8'
 
     # Step 7: Deploy to AKS
     # - name: Deploy to AKS
