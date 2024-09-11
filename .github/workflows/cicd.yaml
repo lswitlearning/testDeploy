@@ -44,11 +44,11 @@ jobs:
       run: |
         docker push task8.azurecr.io/myapp:${{ github.sha }}
     
-    #step:
-    - uses: azure/aks-set-context@v3
-      with:
-        resource-group: 'deakinuni'
-        cluster-name: 'task8'
+    # #step:
+    # - uses: azure/aks-set-context@v3
+    #   with:
+    #     resource-group: 'deakinuni'
+    #     cluster-name: 'task8'
 
     # Step 7: Deploy to AKS
     # - name: Deploy to AKS
