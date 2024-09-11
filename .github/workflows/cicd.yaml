@@ -37,16 +37,16 @@ jobs:
     # Step 5: Build Docker image
     - name: Build Docker image
       run: |
-        docker build -t task8.azurecr.io/myapp:lastest .
+        docker build -t task8.azurecr.io/myapp:${{ github.sha }} .
 
     # Step 6: Push Docker image to ACR
     - name: Push Docker image to ACR
       run: |
-        docker push task8.azurecr.io/myapp:lastest
+        docker push task8.azurecr.io/myapp:${{ github.sha }}
 
     # Step 7: Deploy to AKS
     - name: Deploy to AKS
       run: |
-        kubectl set image deployment/myapp myapp=task8.azurecr.io/myapp:lastest
-      env:
-        KUBECONFIG: ${{ secrets.AKS_KUBECONFIG }}
+        kubectl set image deployment/myapp myapp=task8.azurecr.io/myapp:${{ github.sha }}
+      # env:
+      #   KUBECONFIG: ${{ secrets.AKS_KUBECONFIG }}
